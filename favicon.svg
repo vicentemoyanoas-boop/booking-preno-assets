@@ -1,0 +1,10 @@
+
+<!-- favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Ajusta el emoji que prefieras: 📅 (U+1F4C5) o 🗓️ (U+1F5D3) -->
+  <text x="50%" y="50%"
+        dominant-baseline="central"
+        text-anchor="middle"
+        font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, EmojiOne Color, sans-serif"
+        font-size="56">📅</text>
+</svg>
