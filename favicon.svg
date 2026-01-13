@@ -1,112 +1,60 @@
-
-<!-- favicon.svg · Calendario cute con check y carita -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Sombras suaves -->
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".35"/>
+    <!-- Gradientes -->
+    <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4FC3FF"/>
+      <stop offset="100%" stop-color="#0A6ED1"/>
+    </linearGradient>
+
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EAF3FF"/>
+    </linearGradient>
+
+    <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7CFF7A"/>
+      <stop offset="100%" stop-color="#2FB344"/>
+    </linearGradient>
+
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="15" flood-color="#000" flood-opacity="0.25"/>
     </filter>
-
-    <!-- Gradientes del cuerpo -->
-    <linearGradient id="g-body" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset=".65" stop-color="#e9f4ff"/>
-      <stop offset="1" stop-color="#d6eef6"/>
-    </linearGradient>
-    <linearGradient id="g-outline" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0a4f5a"/>
-      <stop offset="1" stop-color="#1d7c70"/>
-    </linearGradient>
-
-    <!-- Barra superior -->
-    <linearGradient id="g-top" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#1bb2ff"/>
-      <stop offset=".55" stop-color="#1595ff"/>
-      <stop offset="1" stop-color="#0e64d8"/>
-    </linearGradient>
-
-    <!-- Bordes interiores sutiles -->
-    <linearGradient id="g-inner-stroke" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#bfe8ff" stop-opacity=".6"/>
-      <stop offset="1" stop-color="#87c4e8" stop-opacity=".25"/>
-    </linearGradient>
-
-    <!-- Cuadritos -->
-    <linearGradient id="c-blue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#6fd3ff"/><stop offset="1" stop-color="#2b73ff"/>
-    </linearGradient>
-    <linearGradient id="c-purple" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#b697ff"/><stop offset="1" stop-color="#6446ff"/>
-    </linearGradient>
-    <linearGradient id="c-yellow" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ffa726"/>
-    </linearGradient>
-    <linearGradient id="c-orange" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ffc08a"/><stop offset="1" stop-color="#ff7043"/>
-    </linearGradient>
-
-    <!-- Badge del check -->
-    <linearGradient id="g-badge" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#43d67d"/><stop offset="1" stop-color="#1f9f4a"/>
-    </linearGradient>
-
-    <!-- Brillito -->
-    <radialGradient id="g-spark" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#fff89a"/><stop offset=".6" stop-color="#ffd24c"/>
-      <stop offset="1" stop-color="#ff9f00" stop-opacity="0"/>
-    </radialGradient>
   </defs>
 
-  <!-- Páginas apiladas (efecto borde verde-azul) -->
-  <g filter="url(#shadow)">
-    <rect x="6.5" y="11.5" width="51" height="44" rx="10" fill="#0e2f36" opacity=".85"/>
-    <rect x="7.8" y="13.0" width="49" height="42" rx="10" fill="#115a51" opacity=".85"/>
-    <!-- Cuerpo principal -->
-    <rect x="5.5" y="10.5" width="53" height="46" rx="10"
-          fill="url(#g-body)" stroke="url(#g-outline)" stroke-width="2"/>
-  </g>
+  <!-- Cuerpo principal -->
+  <rect x="80" y="120" rx="48" ry="48" width="352" height="300"
+        fill="url(#bodyGrad)" stroke="#0A4F9E" stroke-width="10"
+        filter="url(#softShadow)"/>
 
   <!-- Barra superior -->
-  <rect x="8" y="12" width="47" height="14" rx="7" fill="url(#g-top)"/>
-  <rect x="8" y="25.5" width="47" height="1.5" fill="url(#g-inner-stroke)" opacity=".65"/>
+  <rect x="80" y="120" rx="48" ry="48" width="352" height="90"
+        fill="url(#blueGrad)"/>
 
-  <!-- Aros -->
-  <g>
-    <rect x="16" y="7.5"  width="8" height="10" rx="4" fill="#bde8ff" stroke="#1086ff" stroke-width="1.5"/>
-    <rect x="40" y="7.5"  width="8" height="10" rx="4" fill="#bde8ff" stroke="#1086ff" stroke-width="1.5"/>
-  </g>
+  <!-- Ganchos -->
+  <rect x="160" y="80" rx="18" ry="18" width="48" height="80" fill="#BFE8FF"/>
+  <rect x="304" y="80" rx="18" ry="18" width="48" height="80" fill="#BFE8FF"/>
 
   <!-- Carita -->
-  <g>
-    <circle cx="24.5" cy="30" r="3.4" fill="#0b1b2a"/>
-    <circle cx="39.5" cy="30" r="3.4" fill="#0b1b2a"/>
-    <circle cx="23.6" cy="29.2" r="1.1" fill="#fff" opacity=".9"/>
-    <circle cx="38.6" cy="29.2" r="1.1" fill="#fff" opacity=".9"/>
-    <path d="M26,37 q6,5 12,0" fill="none" stroke="#0b1b2a" stroke-width="2.2" stroke-linecap="round"/>
-  </g>
+  <circle cx="210" cy="235" r="14" fill="#0A4F9E"/>
+  <circle cx="302" cy="235" r="14" fill="#0A4F9E"/>
+  <path d="M220 260 Q256 290 292 260"
+        stroke="#0A4F9E" stroke-width="8" fill="none" stroke-linecap="round"/>
 
-  <!-- Cuadritos de colores -->
-  <g>
-    <rect x="14" y="36.5" width="10" height="8" rx="2.2" fill="url(#c-blue)"/>
-    <rect x="25.5" y="36.5" width="10" height="8" rx="2.2" fill="url(#c-purple)"/>
-    <rect x="14" y="46" width="10" height="8" rx="2.2" fill="url(#c-yellow)"/>
-    <rect x="25.5" y="46" width="10" height="8" rx="2.2" fill="url(#c-orange)"/>
-  </g>
+  <!-- Cuadros calendario -->
+  <rect x="150" y="300" rx="10" ry="10" width="52" height="52" fill="#4FC3FF"/>
+  <rect x="210" y="300" rx="10" ry="10" width="52" height="52" fill="#6EE7B7"/>
+  <rect x="270" y="300" rx="10" ry="10" width="52" height="52" fill="#FFD166"/>
+  <rect x="150" y="360" rx="10" ry="10" width="52" height="52" fill="#60A5FA"/>
+  <rect x="210" y="360" rx="10" ry="10" width="52" height="52" fill="#A78BFA"/>
 
-  <!-- Badge verde con check -->
-  <g>
-    <rect x="37.5" y="36.2" width="14.5" height="16.5" rx="3.5" fill="url(#g-badge)" stroke="#15763a" stroke-width="1"/>
-    <path d="M41.2 44.3 l3.0 3.1 6.1-6.6"
-          fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
+  <!-- Check verde -->
+  <rect x="330" y="300" rx="18" ry="18" width="100" height="100"
+        fill="url(#greenGrad)"/>
+  <path d="M355 350 L375 370 L410 330"
+        stroke="#FFFFFF" stroke-width="12"
+        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Brillo en esquina superior derecha -->
-  <g transform="translate(50,14)">
-    <circle r="6" fill="url(#g-spark)" opacity=".9"/>
-    <path d="M0-7 L1.2-1.5 7 0 1.2 1.5 0 7 -1.2 1.5 -7 0 -1.2 -1.5 Z"
-          fill="#fff6b5" opacity=".9"/>
-  </g>
-
-  <!-- Sutil brillo sobre barra -->
-  <rect x="10" y="13" width="43" height="6" rx="3" fill="#ffffff" opacity=".22"/>
+  <!-- Destello -->
+  <polygon points="430,110 442,138 470,150 442,162 430,190 418,162 390,150 418,138"
+           fill="#FFD700"/>
 </svg>
