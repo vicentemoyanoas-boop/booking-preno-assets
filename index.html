@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reserva de Cita</title>
+
+  <!-- SweetAlert2 CSS -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+  <style>
+    :root{
+      --bg: #eef2f4;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --muted2:#64748b;
+      --border: rgba(15, 23, 42, .10);
+      --shadow: 0 20px 45px rgba(15,23,42,.10);
+      --shadow2: 0 10px 25px rgba(15,23,42,.08);
+
+      --primary: #1976D2;
+      --primary-2:#1e88e5;
+
+      --success: #43A047;
+      --success-2:#66BB6A;
+
+      --danger: #d32f2f;
+      --secondary:#607D8B;
+
+      --radius: 16px;
+
+      /* ⭐ tokens para “más pro” */
+      --soft: rgba(15,23,42,.03);
+      --soft2: rgba(255,255,255,.70);
+      --ring: 0 0 0 4px rgba(25,118,210,.12);
+
+      /* Responsive tokens */
+      --page-pad: 22px;
+      --card-max: 640px;
+      --content-pad-x: 24px;
+      --content-pad-y: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+
+      /* ✅ Fondo “amigable” pero profesional */
+      background:
+        radial-gradient(900px 380px at 20% 0%, rgba(25,118,210,.10), transparent 62%),
+        radial-gradient(900px 380px at 80% 10%, rgba(67,160,71,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0)),
+        var(--bg);
+
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+
+      padding: var(--page-pad);
+      padding-bottom: calc(var(--page-pad) + env(safe-area-inset-bottom));
+      padding-top: calc(var(--page-pad) + env(safe-area-inset-top));
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: var(--card-max);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      transform: translateZ(0);
+    }
+
+    /* ✅ Barra superior sutil (profesional, da profundidad sin cambiar estructura) */
+    .form-container::before{
+      content:"";
+      position:absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(25,118,210,.85), rgba(67,160,71,.85));
+      opacity: .85;
+      pointer-events:none;
+    }
+
+    .header {
+      padding: 22px var(--content-pad-x) 14px;
+      border-bottom: 1px solid var(--border);
+
+      /* ✅ Leve “tinte” en el header para que no sea plano */
+      background:
+        radial-gradient(900px 260px at 50% 0%, rgba(25,118,210,.07), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.97), rgba(255,255,255,1));
+    }
+
+    .brand {
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+    }
+    .brand img {
+      width: clamp(150px, 28vw, 220px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(15,23,42,.12));
+    }
+
+    .title {
+      margin: 6px 0 0;
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: -0.25px;
+    }
+    .subtitle {
+      margin: 6px 0 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .content {
+      padding: var(--content-pad-y) var(--content-pad-x) 22px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    label {
+      display: block;
+      font-weight: 750;
+      font-size: 12.8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: .1px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(15,23,42,.14);
+
+      /* ✅ look más “app”: fondo suavemente gris, y al focus vuelve blanco */
+      background: rgba(15,23,42,.015);
+      outline: none;
+
+      font-size: 14px;
+      transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease, transform .06s ease;
+    }
+
+    input::placeholder { color: rgba(71,85,105,.78); }
+
+    input:focus, select:focus {
+      border-color: rgba(25,118,210,.55);
+      box-shadow: var(--ring);
+      background: #fff;
+    }
+
+    /* ✅ micro “lift” al focus (muy sutil) */
+    input:focus, select:focus { transform: translateY(-1px); }
+
+    input:disabled, select:disabled {
+      background: rgba(15,23,42,.04);
+      color: rgba(15,23,42,.60);
+      cursor: not-allowed;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .hint {
+      margin-top: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.55));
+      color: var(--muted2);
+      font-size: 12.5px;
+      line-height: 1.35;
+    }
+    .hint strong { color: var(--text); }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .08s ease, filter .15s ease, box-shadow .15s ease, opacity .15s ease;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: var(--shadow2);
+      user-select: none;
+      min-height: 44px;
+      letter-spacing: .1px;
+    }
+    button:active { transform: translateY(1px); }
+    button:hover { filter: brightness(1.03); }
+
+    .btn-secondary {
+      background: rgba(96,125,139,.14);
+      color: #0f172a;
+      border: 1px solid rgba(96,125,139,.22);
+      box-shadow: none;
+    }
+    .btn-secondary:hover { background: rgba(96,125,139,.18); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--success), var(--success-2));
+      color: #fff;
+      box-shadow: 0 12px 22px rgba(67,160,71,.18);
+    }
+
+    button:disabled {
+      opacity: .58;
+      cursor: not-allowed;
+      transform: none;
+      filter: none;
+    }
+
+    .status {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--muted);
+      min-height: 18px;
+    }
+
+    input, select, button { -webkit-tap-highlight-color: transparent; }
+
+    /* ✅ Mejor “feel” del select en algunos navegadores */
+    select {
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(15,23,42,.45) 50%),
+        linear-gradient(135deg, rgba(15,23,42,.45) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) calc(50% - 3px),
+        calc(100% - 13px) calc(50% - 3px);
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+      appearance: none;
+    }
+
+    /* =========================
+       ✅ Responsive: móviles
+       ========================= */
+    @media (max-width: 520px) {
+      :root{
+        --page-pad: 12px;
+        --radius: 14px;
+        --card-max: 100%;
+        --content-pad-x: 14px;
+        --content-pad-y: 14px;
+      }
+
+      body{
+        place-items: start center;
+      }
+
+      .title{ font-size: 20px; }
+      .subtitle{ font-size: 12.8px; }
+
+      .row-2 { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr; }
+
+      input, select{
+        font-size: 16px; /* evita zoom automático en iOS */
+      }
+    }
+
+    /* =========================
+       ✅ Landscape bajo (celular acostado)
+       ========================= */
+    @media (max-height: 640px) and (max-width: 900px) {
+      body{
+        place-items: start center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
+      .header{ padding-top: 16px; }
+      .brand{ margin-bottom: 6px; }
+    }
+
+    /* Accesibilidad: reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+      input:focus, select:focus { transform: none !important; }
+    }
+
+    /* ===== Desktop más compacto (se siente como ~85–90% sin zoom) ===== */
+    @media (min-width: 900px) {
+      :root{
+        --card-max: 520px;      /* antes 560/640 */
+        --content-pad-x: 18px;  /* antes 20/24 */
+        --content-pad-y: 14px;  /* antes 16/18 */
+      }
+
+      body { padding: 14px; }
+
+      .header { padding: 16px var(--content-pad-x) 10px; }
+      .content { padding: var(--content-pad-y) var(--content-pad-x) 16px; }
+
+      .brand img { width: clamp(140px, 18vw, 190px); }
+
+      .title { font-size: 19px; }
+      .subtitle { font-size: 12.5px; }
+
+      .grid { gap: 11px; }
+
+      label { margin-bottom: 5px; }
+
+      input, select { padding: 10px 12px; border-radius: 11px; }
+      button { padding: 10px 14px; border-radius: 13px; }
+
+      .hint { padding: 9px 12px; font-size: 12.3px; }
+      .actions { margin-top: 14px; }
+    }
+
+    /* Hover lift (desktop) */
+    @media (hover:hover) and (min-width: 900px){
+      .form-container{
+        transition: transform .18s ease, box-shadow .18s ease;
+      }
+      .form-container:hover{
+        transform: translateY(-2px);
+        box-shadow: 0 26px 60px rgba(15,23,42,.12);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <div class="header">
+      <div class="brand" id="brandBlock">
+        <img id="brandLogo" src="brandLogo" alt="Logo">
+      </div>
+
+      <h2 class="title">Reserva de Cita</h2>
+      <p class="subtitle">Completa tus datos y elige un horario disponible.</p>
+    </div>
+
+    <div class="content">
+      <div class="grid">
+
+        <div>
+          <label>Nombre</label>
+          <input id="nombre" required placeholder="Tu nombre completo" autocomplete="name">
+        </div>
+
+        <div>
+          <label>Correo</label>
+          <input id="correo" type="email" required placeholder="tu@correo.com" autocomplete="email">
+        </div>
+
+        <div>
+          <label>Especialista</label>
+          <select id="especialista" required>
+            <option value="">Selecciona</option>
+          </select>
+        </div>
+
+        <input type="hidden" id="correo_especialista">
+        <input type="hidden" id="direccion">
+
+        <div class="row-2">
+          <div>
+            <label>Duración</label>
+            <select id="duracion" required></select>
+          </div>
+
+          <div>
+            <label>Fecha</label>
+            <input type="date" id="fecha" required>
+          </div>
+        </div>
+
+        <div class="hint" id="hint">
+          Agenda en pasos de <strong>10 minutos</strong>
+        </div>
+
+        <div>
+          <label>Hora</label>
+          <select id="hora" required>
+            <option value="">Selecciona hora</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Modalidad</label>
+          <select id="modalidad" required>
+            <option value="presencial">Presencial</option>
+            <option value="online">Online</option>
+          </select>
+        </div>
+
+        <div class="actions">
+          <button id="soloReservarBtn" class="btn-secondary" type="button">Reservar</button>
+          <button id="reservarPagarBtn" class="btn-primary" type="button">Reservar e ir al pago</button>
+        </div>
+
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SweetAlert2 script -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    // Ocultar el bloque si la imagen no carga por algún motivo
+    (function brandFallback() {
+      const brandBlock = document.getElementById('brandBlock');
+      const brandLogo = document.getElementById('brandLogo');
+      if (brandLogo && brandBlock) {
+        brandLogo.addEventListener('error', () => {
+          brandBlock.style.display = 'none';
+          console.warn('No se pudo cargar el logo desde jsDelivr.');
+        });
+      }
+    })();
+
+    // --------- Brand / SweetAlert helpers ----------
+    const BRAND = {
+      primary: '#1976D2',
+      success: '#43A047',
+      error:   '#d32f2f'
+    };
+
+    const swalBase = Swal.mixin({
+      confirmButtonColor: BRAND.primary,
+      cancelButtonColor:  BRAND.error,
+      buttonsStyling: true,
+      allowOutsideClick: false,
+      allowEscapeKey: true
+    });
+
+    function showLoading(title = 'Procesando reserva…') {
+      return swalBase.fire({
+        title,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+        showConfirmButton: false
+      });
+    }
+
+    function notifySuccess({ titulo = '¡Reserva creada!', texto = 'Tu cita fue creada y está pendiente de confirmación.', linkPago = '' } = {}) {
+      const htmlExtra = linkPago
+        ? `<p style="margin-top:12px">
+             <a href="${linkPago}" target="_top" rel="noopener noreferrer"
+                style="display:inline-block;background:${BRAND.success};color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:700">
+                Pagar ahora
+             </a>
+           </p>`
+        : '';
+      return swalBase.fire({
+        icon: 'success',
+        title: titulo,
+        html: `${texto}${htmlExtra}`,
+        confirmButtonText: 'Listo'
+      });
+    }
+
+    function notifyError({ titulo = 'Hubo un problema', texto = 'No pudimos completar la acción. Intenta nuevamente.' } = {}) {
+      return swalBase.fire({
+        icon: 'error',
+        title: titulo,
+        text: texto,
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: BRAND.error
+      });
+    }
+
+    // ✅ --------- Constantes y validación de horario laboral (front) ----------
+    const START_HOUR = 9;
+    const END_HOUR   = 20;
+
+    function validaHorarioLaboral(fechaStr, horaStr, duracionMin) {
+      try {
+        if (!fechaStr || !horaStr || !duracionMin) return false;
+        const [year, month, day] = fechaStr.split("-").map(Number);
+        const [hh, mm] = horaStr.split(":").map(Number);
+        const ini = new Date(year, month - 1, day, hh, mm, 0, 0);
+        const fin = new Date(ini.getTime() + parseInt(duracionMin, 10) * 60000);
+
+        const hIni = ini.getHours();
+        const hFin = fin.getHours();
+        const mFin = fin.getMinutes();
+
+        if (hIni < START_HOUR) return false;
+        if (hFin > END_HOUR) return false;
+        if (hFin === END_HOUR && mFin > 0) return false;
+
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // --------- DOM refs ----------
+    const nombre = document.getElementById("nombre");
+    const correo = document.getElementById("correo");
+    const especialista = document.getElementById("especialista");
+    const correo_especialista = document.getElementById("correo_especialista");
+    const direccion = document.getElementById("direccion");
+    const duracion = document.getElementById("duracion");
+    const fecha = document.getElementById("fecha");
+    const hora = document.getElementById("hora");
+    const modalidad = document.getElementById("modalidad");
+    const soloReservarBtn = document.getElementById("soloReservarBtn");
+    const reservarPagarBtn = document.getElementById("reservarPagarBtn");
+    const statusEl = document.getElementById("status");
+
+    // --------- Inicialización ----------
+    document.addEventListener("DOMContentLoaded", () => {
+      duracion.innerHTML = "";
+      for (let i = 30; i <= 60; i += 10) {
+        const o = document.createElement("option");
+        o.value = i;
+        o.textContent = i + " min";
+        duracion.appendChild(o);
+      }
+
+      const now = new Date();
+      const tzOffsetMs = now.getTimezoneOffset() * 60000;
+      const localISO = new Date(now - tzOffsetMs).toISOString().split('T')[0];
+      fecha.min = localISO;
+
+      cargarEspecialistas();
+    });
+
+    especialista.addEventListener("change", function () {
+      const opt = this.options[this.selectedIndex];
+      correo_especialista.value = opt?.dataset?.email || "";
+      direccion.value = opt?.dataset?.direccion || "";
+      actualizarHoras();
+    });
+    fecha.addEventListener("change", actualizarHoras);
+    duracion.addEventListener("change", actualizarHoras);
+
+    function actualizarHoras() {
+      const esDiaHabil_ = (dateObj) => {
+        const d = dateObj.getDay();
+        return d >= 1 && d <= 5;
+      };
+
+      hora.innerHTML = '<option value="">Selecciona hora</option>';
+      statusEl.textContent = "";
+
+      if (!correo_especialista.value || !duracion.value || !fecha.value) return;
+
+      const picked = new Date(fecha.value + "T00:00:00");
+      if (!esDiaHabil_(picked)) {
+        const o = document.createElement("option");
+        o.value = "";
+        o.textContent = "Solo disponible de lunes a viernes";
+        o.disabled = true;
+        hora.innerHTML = "";
+        hora.appendChild(o);
+        statusEl.textContent = "Selecciona una fecha de lunes a viernes.";
+        return;
+      }
+
+      soloReservarBtn.disabled = true;
+      reservarPagarBtn.disabled = true;
+      statusEl.textContent = "Cargando horarios...";
+
+      google.script.run
+        .withSuccessHandler((horas) => {
+          hora.innerHTML = '<option value="">Selecciona hora</option>';
+
+          if (!horas || horas.length === 0) {
+            const o = document.createElement("option");
+            o.value = "";
+            o.textContent = "No hay horarios disponibles";
+            o.disabled = true;
+            hora.appendChild(o);
+            statusEl.textContent = "No hay disponibilidad para la fecha seleccionada.";
+          } else {
+            horas.forEach((h) => {
+              const o = document.createElement("option");
+              const v = (h && (h.value || h.hora)) ? String(h.value || h.hora) : "";
+              let label = (h && (h.label || h.hora || h.value)) ? String(h.label || h.hora || h.value) : "";
+              const pasado = !!h?.pasado;
+              const ocupado = !!h?.ocupado;
+              if (pasado) label += " (pasado)";
+              if (ocupado) label += " (ocupado)";
+              o.value = v;
+              o.textContent = label || v || "Horario inválido";
+              if (!v || pasado || ocupado) o.disabled = true;
+              hora.appendChild(o);
+            });
+
+            const firstEnabled = Array.from(hora.options).find(opt => opt.value && !opt.disabled);
+            if (firstEnabled) hora.value = firstEnabled.value;
+
+            statusEl.textContent = "Selecciona un horario disponible.";
+          }
+
+          soloReservarBtn.disabled = false;
+          reservarPagarBtn.disabled = false;
+        })
+        .withFailureHandler((err) => {
+          notifyError({ texto: "Error al cargar horarios: " + (err?.message || err) });
+          statusEl.textContent = "";
+          soloReservarBtn.disabled = false;
+          reservarPagarBtn.disabled = false;
+        })
+        .obtenerHorariosDisponibles(
+          correo_especialista.value,
+          parseInt(duracion.value, 10),
+          fecha.value
+        );
+    }
+
+    function validar() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!nombre.value.trim()) { notifyError({ texto: "Debes ingresar tu nombre." }); return false; }
+      if (!correo.value.trim() || !emailRegex.test(correo.value.trim())) {
+        notifyError({ texto: "Debes ingresar un correo válido." }); return false;
+      }
+      if (!especialista.value.trim()) { notifyError({ texto: "Debes seleccionar especialista." }); return false; }
+      if (!fecha.value) { notifyError({ texto: "Debes seleccionar una fecha." }); return false; }
+      if (!duracion.value || !hora.value) { notifyError({ texto: "Debes seleccionar duración y hora." }); return false; }
+
+      const okHorario = validaHorarioLaboral(fecha.value, hora.value, duracion.value);
+      if (!okHorario) {
+        notifyError({ texto: `La hora seleccionada excede el horario de agenda (${START_HOUR}:00–${END_HOUR}:00).` });
+        return false;
+      }
+      return true;
+    }
+
+    function buildDatos(modo) {
+      return {
+        nombre: nombre.value.trim(),
+        correo: correo.value.trim(),
+        nombre_profesional: especialista.value.trim(),
+        correo_especialista: correo_especialista.value.trim(),
+        direccion: direccion.value.trim(),
+        fecha: fecha.value,
+        hora:  hora.value,
+        duracion: duracion.value,
+        modalidad: modalidad.value,
+        modo
+      };
+    }
+
+    soloReservarBtn.addEventListener("click", () => {
+      if (!validar()) return;
+      const datos = buildDatos("solo");
+
+      soloReservarBtn.disabled = true;
+      reservarPagarBtn.disabled = true;
+      statusEl.textContent = "Reservando...";
+      showLoading("Creando tu reserva…");
+
+      google.script.run
+        .withSuccessHandler((r) => {
+          Swal.close();
+          soloReservarBtn.disabled = false;
+          reservarPagarBtn.disabled = false;
+          if (r && r.ok) {
+            statusEl.textContent = "Reserva creada. Te enviamos un correo con el link de pago.";
+            notifySuccess({
+              titulo: '¡Reserva creada!',
+              texto: 'Tu cita fue reservada y está pendiente de confirmación. Recuerda completar el pago.',
+              linkPago: r.linkPago || ''
+            });
+          } else {
+            statusEl.textContent = "";
+            notifyError({ texto: (r && r.message) ? r.message : 'No pudimos crear la reserva.' });
+          }
+        })
+        .withFailureHandler((e) => {
+          Swal.close();
+          soloReservarBtn.disabled = false;
+          reservarPagarBtn.disabled = false;
+          statusEl.textContent = "";
+          notifyError({ texto: e?.message || "Error al crear la reserva." });
+        })
+        .guardarReserva(datos);
+    });
+
+reservarPagarBtn.addEventListener("click", () => {
+  if (!validar()) return;
+  const datos = buildDatos("pagar");
+
+  soloReservarBtn.disabled = true;
+  reservarPagarBtn.disabled = true;
+  statusEl.textContent = "Reservando y redirigiendo al pago...";
+  showLoading("Creando tu reserva y preparando el pago…");
+
+  google.script.run
+    .withSuccessHandler((r) => {
+      Swal.close();
+      soloReservarBtn.disabled = false;
+      reservarPagarBtn.disabled = false;
+
+      if (r && r.ok && r.linkPago) {
+        const url = String(r.linkPago);
+
+        try {
+          if (window.top && window.top.location) {
+            window.top.location.assign(url);
+            return;
+          }
+        } catch (err) {}
+
+        Swal.fire({
+          icon: "info",
+          title: "Continuar al pago",
+          html: `
+            <p>Tu navegador bloqueó la redirección automática.</p>
+            <p style="margin-top:12px">
+              <a href="${url}" target="_top" rel="noopener noreferrer"
+                 style="display:inline-block;padding:10px 14px;border-radius:10px;
+                        background:#2e7d32;color:#fff;text-decoration:none;font-weight:600">
+                Ir a Mercado Pago
+              </a>
+            </p>
+          `,
+          showConfirmButton: true,
+          confirmButtonText: "Entendido"
+        });
+        return;
+      }
+
+      notifyError({ texto: (r && r.message) ? r.message : "Reserva creada, pero sin link de pago." });
+    })
+    .withFailureHandler((e) => {
+      Swal.close();
+      soloReservarBtn.disabled = false;
+      reservarPagarBtn.disabled = false;
+      statusEl.textContent = "";
+      notifyError({ texto: e?.message || "Error al crear la reserva." });
+    })
+    .guardarReserva(datos);
+});
+
+
+    function renderEspecialistas(list) {
+      const sel = document.getElementById("especialista");
+      if (!sel) return;
+
+      sel.innerHTML = '<option value="">Selecciona</option>';
+
+      if (!Array.isArray(list) || list.length === 0) {
+        const o = document.createElement('option');
+        o.value = '';
+        o.textContent = 'No hay especialistas activos';
+        o.disabled = true;
+        sel.appendChild(o);
+        sel.disabled = true;
+        return;
+      }
+
+      sel.disabled = false;
+
+      list.forEach(sp => {
+        const o = document.createElement('option');
+        o.value = sp.nombre;
+        o.textContent = sp.nombre;
+        o.dataset.email = sp.email || '';
+        o.dataset.direccion = sp.direccion || '';
+        sel.appendChild(o);
+      });
+    }
+
+    function cargarEspecialistas() {
+      const sel = document.getElementById("especialista");
+      if (sel) {
+        sel.innerHTML = '<option value="">Cargando…</option>';
+        sel.disabled = true;
+      }
+
+      google.script.run
+        .withSuccessHandler(list => renderEspecialistas(list || []))
+        .withFailureHandler(err => {
+          const sel2 = document.getElementById("especialista");
+          if (sel2) {
+            sel2.innerHTML = '<option value="">No se pudo cargar</option>';
+            sel2.disabled = true;
+          }
+          if (typeof Swal !== 'undefined') {
+            Swal.fire({ icon: 'error', title: 'Ups', text: 'No se pudo cargar la lista de especialistas.' });
+          }
+        })
+        .listarEspecialistasPublico();
+    }
+  </script>
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    const mpFailed = "<?= mp_failed ?>"; // "1" o ""
+
+    if (mpFailed === "1") {
+      Swal.fire({
+        icon: "error",
+        title: "No se pudo pagar tu cita",
+        text: "El pago fue rechazado o cancelado. Intenta nuevamente.",
+        confirmButtonText: "Volver"
+      }).then(() => {
+        // Opcional: limpiar URL para que no reaparezca al refrescar
+        try { history.replaceState({}, "", "<?= PUBLIC_BASE ?>"); } catch(e) {}
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
